@@ -1,0 +1,525 @@
+<?xml version="1.0" encoding="windows-1252" ?>
+<!DOCTYPE ViewObject SYSTEM "jbo_03_01.dtd">
+<!---->
+<ViewObject
+  xmlns="http://xmlns.oracle.com/bc4j"
+  Name="ResumenPedidosVO"
+  Version="11.1.1.64.93"
+  InheritPersonalization="true"
+  BindingStyle="JDBC"
+  CustomQuery="true"
+  FetchMode="FETCH_AS_NEEDED"
+  PageIterMode="Full"
+  UseGlueCode="false"
+  ComponentClass="es.ramondin.estadopedidos.model.views.ResumenPedidosVOImpl"
+  ComponentInterface="es.ramondin.estadopedidos.model.views.common.ResumenPedidosVO"
+  ClientProxyName="es.ramondin.estadopedidos.model.views.client.ResumenPedidosVOClient"
+  RowClass="es.ramondin.estadopedidos.model.views.ResumenPedidosVORowImpl">
+  <DesignTime>
+    <Attr Name="_isExpertMode" Value="true"/>
+    <Attr Name="_codeGenFlag2" Value="Access|Coll|VarAccess"/>
+    <Attr Name="_isCodegen" Value="true"/>
+  </DesignTime>
+  <Properties>
+    <SchemaBasedProperties>
+      <LABEL
+        ResId="es.ramondin.estadopedidos.model.views.ResumenPedidosVO_LABEL"/>
+    </SchemaBasedProperties>
+  </Properties>
+  <Variable
+    Name="EjecutarQueryBV"
+    Kind="where"
+    Type="java.lang.Integer"
+    DefaultValue="0">
+    <AttrArray Name="ExtendedDataInts">
+      <Item Value="0"/>
+    </AttrArray>
+  </Variable>
+  <Variable
+    Name="DesdeAnoPedBV"
+    Kind="where"
+    Type="java.lang.Integer">
+    <AttrArray Name="ExtendedDataInts">
+      <Item Value="1"/>
+    </AttrArray>
+  </Variable>
+  <Variable
+    Name="HastaAnoPedBV"
+    Kind="where"
+    Type="java.lang.Integer">
+    <AttrArray Name="ExtendedDataInts">
+      <Item Value="2"/>
+    </AttrArray>
+  </Variable>
+  <Variable
+    Name="DesdeFechaBV"
+    Kind="where"
+    Type="java.lang.Integer">
+    <AttrArray Name="ExtendedDataInts">
+      <Item Value="3"/>
+    </AttrArray>
+  </Variable>
+  <Variable
+    Name="HastaFechaBV"
+    Kind="where"
+    Type="java.lang.Integer">
+    <AttrArray Name="ExtendedDataInts">
+      <Item Value="4"/>
+    </AttrArray>
+  </Variable>
+  <Variable
+    Name="MargenDiasBV"
+    Kind="where"
+    Type="java.lang.Integer">
+    <AttrArray Name="ExtendedDataInts">
+      <Item Value="5"/>
+    </AttrArray>
+  </Variable>
+  <SQLQuery>
+    <![CDATA[SELECT ACTIVIDAD, MVAR_DESACTI_78 AS DESC_ACTIVIDAD0, FAMIESTP, FFABMVAR_120.MVAR_DESAGRU_120 AS DESC_FAMIESTP, COUNT(1) PEDIDOS_TOTALES,
+    SUM(CASE
+        WHEN FECPR2 < FECPROP THEN 1
+        ELSE 0
+    END) AS ADELANTADO_ACEPTADO,
+    SUM(CASE
+        WHEN ORDPED BETWEEN 90000 AND 99999 THEN 1
+        ELSE 0
+    END) AS URGENTE,
+    SUM(CASE
+        WHEN FECPR2 >= FECPROP THEN 1
+        ELSE 0
+    END) AS NO_ADELANTADO,
+    SUM(CASE
+        WHEN FECPR2 < FECPROP AND FECULTCAJA > FECPR2 THEN 1
+        ELSE 0
+    END) AS ADELANTADO_ACEPTADO_RETRASADO,
+    SUM(CASE
+        WHEN FECPR2 >= FECPROP AND FECULTCAJA > FECPR2 THEN 1
+        ELSE 0
+    END) AS NO_ADELANTADO_RETRASADO
+FROM
+  (SELECT ANOPED, ORDPED, LINPED, FECORD, 
+        LAST(CASE
+            WHEN FECPROP <> 0 THEN FECPROP
+            WHEN TFABFCTP.FCTP_FECHACARGA IS NOT NULL AND TFABFCTP.FCTP_FECHACARGA <> 0 THEN TFABFCTP.FCTP_FECHACARGA
+            ELSE 0
+        END) AS FECPROP, FECULTCAJA, FECPR2, FAMIESTP, ACTIVIDAD
+    FROM 
+        (SELECT 
+            FCOMMPED_L.MPED_ANOPED AS ANOPED, 
+            FCOMMPED_L.MPED_ORDPED AS ORDPED, 
+            FCOMMPED_L.MPED_LINPED AS LINPED, 
+            FCOMMPED_C.MPED_FECORD AS FECORD, 
+            CASE
+                WHEN FCOMPPEP.PPEP_FECPROP IS NOT NULL AND FCOMPPEP.PPEP_FECPROP <> 0 THEN FCOMPPEP.PPEP_FECPROP
+                ELSE 0
+            END AS FECPROP,
+            CASE
+                WHEN FCOMPPEP.PPEP_FECULTCAJA IS NOT NULL AND FCOMPPEP.PPEP_FECULTCAJA <> 0 AND FCOMPPEP.PPEP_FECULTCAJA <> 538976288 THEN FCOMPPEP.PPEP_FECULTCAJA
+                ELSE FCOMMPED_L.MPED_FECFABL
+            END AS FECULTCAJA,
+            FCOMMPED_L.MPED_FECPR2 AS FECPR2, 
+            CASE
+                WHEN FCOMMPED_L.MPED_MODELOCAP = 0 THEN (SELECT MVAR_FAMIESTP_60 FROM FFABMVAR_60 WHERE MVAR_CLAVE_60 = 60 AND MVAR_SECUEN_60 = FCOMMPED_L.MPED_FAMI)
+                ELSE CASE
+                    WHEN (SELECT MVAR_FAMIESTP_94 FROM FFABMVAR_94 WHERE MVAR_CLAVE_94 = 94 AND MVAR_SECUEN_94 = FCOMMPED_L.MPED_FAMI*100 + FCOMMPED_L.MPED_MODELOCAP) = 0 THEN (SELECT MVAR_FAMIESTP_60 FROM FFABMVAR_60 WHERE MVAR_CLAVE_60 = 60 AND MVAR_SECUEN_60 = FCOMMPED_L.MPED_FAMI)
+                    ELSE (SELECT MVAR_FAMIESTP_94 FROM FFABMVAR_94 WHERE MVAR_CLAVE_94 = 94 AND MVAR_SECUEN_94 = FCOMMPED_L.MPED_FAMI*100 + FCOMMPED_L.MPED_MODELOCAP)
+                END
+            END AS FAMIESTP,
+            FCOMMPED_L.MPED_ACTIVIDAD AS ACTIVIDAD
+        FROM FCOMMPED_L
+        LEFT JOIN FCOMMPED_C
+            ON FCOMMPED_C.MPED_ANOPED = FCOMMPED_L.MPED_ANOPED
+            AND FCOMMPED_C.MPED_ORDPED = FCOMMPED_L.MPED_ORDPED
+            AND FCOMMPED_C.MPED_LINPED = 0
+        LEFT JOIN FCOMPPEP
+            ON FCOMPPEP.PPEP_ANOPED = FCOMMPED_L.MPED_ANOPED
+            AND FCOMPPEP.PPEP_ORDPED = FCOMMPED_L.MPED_ORDPED
+            AND FCOMPPEP.PPEP_LINPED = FCOMMPED_L.MPED_LINPED
+        WHERE FCOMMPED_L.MPED_LINPED > 0
+            AND 1 = ?
+            AND FCOMMPED_L.MPED_SITPED <> 9
+            AND FCOMMPED_L.MPED_COMPLEX <> 'S'
+            AND FCOMMPED_L.MPED_ORDPED NOT BETWEEN 80000 AND 89999
+            AND FCOMMPED_L.MPED_ORDPED NOT BETWEEN 400000 AND 499999
+            AND FCOMMPED_L.MPED_ORDPED NOT BETWEEN 500000 AND 599999
+            AND FCOMMPED_L.MPED_ANOPED >= ?
+            AND FCOMMPED_L.MPED_ANOPED <= ?
+            AND FCOMMPED_C.MPED_FECORD >= ?
+            AND FCOMMPED_C.MPED_FECORD <= ?
+        )
+    LEFT JOIN TFABFCTP
+        ON TFABFCTP.FCTP_FAMIESTP = FAMIESTP
+        AND (FECORD - TFABFCTP.FCTP_FECHA) BETWEEN 0 AND ?
+    WHERE FAMIESTP <> 0
+    GROUP BY ANOPED, ORDPED, LINPED, FECORD, FECULTCAJA, FECPR2, FAMIESTP)
+LEFT JOIN FFABMVAR_120
+ON FFABMVAR_120.MVAR_CLAVE_120 = 120
+AND FFABMVAR_120.MVAR_SECUEN_120 = FAMIESTP
+LEFT JOIN FFABMVAR_78
+ON FFABMVAR_78.MVAR_CLAVE_78 = 78
+AND FFABMVAR_78.MVAR_SECUEN_78 = ACTIVIDAD
+GROUP BY ACTIVIDAD, FAMIESTP
+ORDER BY ACTIVIDAD, MVAR_ORDENCO129_120]]>
+  </SQLQuery>
+  <ViewAttribute
+    Name="Actividad"
+    IsQueriable="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Type="java.lang.Integer"
+    ColumnType="BIGINT"
+    AliasName="ACTIVIDAD"
+    Expression="ACTIVIDAD"
+    SQLType="INTEGER">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="4"/>
+    </DesignTime>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="DescActividad"
+    IsQueriable="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Precision="50"
+    Type="java.lang.String"
+    ColumnType="D"
+    AliasName="DESC_ACTIVIDAD"
+    Expression="DESC_ACTIVIDAD"
+    SQLType="VARCHAR">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="30"/>
+    </DesignTime>
+    <Properties>
+      <SchemaBasedProperties>
+        <LABEL
+          ResId="es.ramondin.estadopedidos.model.views.ResumenPedidosVO.DescActividad_LABEL"/>
+      </SchemaBasedProperties>
+    </Properties>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="Famiestp"
+    IsQueriable="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Type="java.lang.Integer"
+    ColumnType="BIGINT"
+    AliasName="FAMIESTP"
+    Expression="FAMIESTP"
+    SQLType="INTEGER">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="4"/>
+    </DesignTime>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="DescFamiestp"
+    IsQueriable="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Precision="30"
+    Type="java.lang.String"
+    ColumnType="D"
+    AliasName="DESC_FAMIESTP"
+    Expression="DESC_FAMIESTP"
+    SQLType="VARCHAR">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="30"/>
+    </DesignTime>
+    <Properties>
+      <SchemaBasedProperties>
+        <LABEL
+          ResId="es.ramondin.estadopedidos.model.views.ResumenPedidosVO.DescFamiestp_LABEL"/>
+      </SchemaBasedProperties>
+    </Properties>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="PedidosTotales"
+    IsQueriable="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Type="java.lang.Integer"
+    ColumnType="P"
+    AliasName="PEDIDOS_TOTALES"
+    Expression="PEDIDOS_TOTALES"
+    SQLType="INTEGER">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="11"/>
+    </DesignTime>
+    <Properties>
+      <SchemaBasedProperties>
+        <LABEL
+          ResId="es.ramondin.estadopedidos.model.views.ResumenPedidosVO.PedidosTotales_LABEL"/>
+      </SchemaBasedProperties>
+    </Properties>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="AdelantadoAceptado"
+    IsQueriable="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Precision="11"
+    Scale="0"
+    Type="java.lang.Integer"
+    ColumnType="A"
+    AliasName="ADELANTADO_ACEPTADO"
+    Expression="ADELANTADO_ACEPTADO"
+    SQLType="INTEGER">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="13"/>
+    </DesignTime>
+    <Properties>
+      <SchemaBasedProperties>
+        <LABEL
+          ResId="es.ramondin.estadopedidos.model.views.ResumenPedidosVO.AdelantadoAceptado_LABEL"/>
+      </SchemaBasedProperties>
+    </Properties>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="Urgente"
+    IsQueriable="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Precision="11"
+    Scale="0"
+    Type="java.lang.Integer"
+    ColumnType="U"
+    AliasName="URGENTE"
+    Expression="URGENTE"
+    SQLType="INTEGER">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="13"/>
+    </DesignTime>
+    <Properties>
+      <SchemaBasedProperties>
+        <LABEL
+          ResId="es.ramondin.estadopedidos.model.views.ResumenPedidosVO.Urgente_LABEL"/>
+      </SchemaBasedProperties>
+    </Properties>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="NoAdelantado"
+    IsQueriable="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Precision="11"
+    Scale="0"
+    Type="java.lang.Integer"
+    ColumnType="A"
+    AliasName="NO_ADELANTADO"
+    Expression="NO_ADELANTADO"
+    SQLType="INTEGER">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="13"/>
+    </DesignTime>
+    <Properties>
+      <SchemaBasedProperties>
+        <LABEL
+          ResId="es.ramondin.estadopedidos.model.views.ResumenPedidosVO.NoAdelantado_LABEL"/>
+      </SchemaBasedProperties>
+    </Properties>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="AdelantadoAceptadoRetrasado"
+    IsQueriable="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Precision="11"
+    Scale="0"
+    Type="java.lang.Integer"
+    ColumnType="A"
+    AliasName="ADELANTADO_ACEPTADO_RETRASADO"
+    Expression="ADELANTADO_ACEPTADO_RETRASADO"
+    SQLType="INTEGER">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="13"/>
+    </DesignTime>
+    <Properties>
+      <SchemaBasedProperties>
+        <LABEL
+          ResId="es.ramondin.estadopedidos.model.views.ResumenPedidosVO.AdelantadoAceptadoRetrasado_LABEL"/>
+      </SchemaBasedProperties>
+    </Properties>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="NoAdelantadoRetrasado"
+    IsQueriable="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Precision="11"
+    Scale="0"
+    Type="java.lang.Integer"
+    ColumnType="N"
+    AliasName="NO_ADELANTADO_RETRASADO"
+    Expression="NO_ADELANTADO_RETRASADO"
+    SQLType="INTEGER">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="13"/>
+    </DesignTime>
+    <Properties>
+      <SchemaBasedProperties>
+        <LABEL
+          ResId="es.ramondin.estadopedidos.model.views.ResumenPedidosVO.NoAdelantadoRetrasado_LABEL"/>
+      </SchemaBasedProperties>
+    </Properties>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="AdelantadoPorcTrans"
+    IsUpdateable="false"
+    IsSelected="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Type="java.math.BigDecimal"
+    ColumnType="BIGINT"
+    AliasName="VIEW_ATTR"
+    SQLType="NUMERIC">
+    <RecalcCondition><![CDATA[true]]></RecalcCondition>
+    <TransientExpression><![CDATA[PedidosTotales != 0 ? AdelantadoAceptado.multiply(new BigDecimal("100")).divide(PedidosTotales, 2, BigDecimal.ROUND_HALF_UP) : null]]></TransientExpression>
+    <Dependencies>
+      <Item
+        Value="AdelantadoAceptado"/>
+      <Item
+        Value="PedidosTotales"/>
+    </Dependencies>
+    <Properties>
+      <SchemaBasedProperties>
+        <LABEL
+          ResId="es.ramondin.estadopedidos.model.views.ResumenPedidosVO.AdelantadoPorcTrans_LABEL"/>
+      </SchemaBasedProperties>
+    </Properties>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="UrgentePorcTrans"
+    IsUpdateable="false"
+    IsSelected="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Type="java.math.BigDecimal"
+    ColumnType="BIGINT"
+    AliasName="VIEW_ATTR"
+    SQLType="NUMERIC">
+    <RecalcCondition><![CDATA[true]]></RecalcCondition>
+    <TransientExpression><![CDATA[PedidosTotales != 0 ? Urgente.multiply(new BigDecimal("100")).divide(PedidosTotales, 2, BigDecimal.ROUND_HALF_UP) : null]]></TransientExpression>
+    <Dependencies>
+      <Item
+        Value="Urgente"/>
+      <Item
+        Value="PedidosTotales"/>
+    </Dependencies>
+    <Properties>
+      <SchemaBasedProperties>
+        <LABEL
+          ResId="es.ramondin.estadopedidos.model.views.ResumenPedidosVO.UrgentePorcTrans_LABEL"/>
+      </SchemaBasedProperties>
+    </Properties>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="NoAdelantadoPorcTrans"
+    IsUpdateable="false"
+    IsSelected="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Type="java.math.BigDecimal"
+    ColumnType="BIGINT"
+    AliasName="VIEW_ATTR"
+    SQLType="NUMERIC">
+    <RecalcCondition><![CDATA[true]]></RecalcCondition>
+    <TransientExpression><![CDATA[PedidosTotales != 0 ? NoAdelantado.multiply(new BigDecimal("100")).divide(PedidosTotales, 2, BigDecimal.ROUND_HALF_UP) : null]]></TransientExpression>
+    <Dependencies>
+      <Item
+        Value="NoAdelantado"/>
+      <Item
+        Value="PedidosTotales"/>
+    </Dependencies>
+    <Properties>
+      <SchemaBasedProperties>
+        <LABEL
+          ResId="es.ramondin.estadopedidos.model.views.ResumenPedidosVO.NoAdelantadoPorcTrans_LABEL"/>
+      </SchemaBasedProperties>
+    </Properties>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="AdelantadoRetrasadoPorcTrans"
+    IsUpdateable="false"
+    IsSelected="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Type="java.math.BigDecimal"
+    ColumnType="BIGINT"
+    AliasName="VIEW_ATTR"
+    SQLType="NUMERIC">
+    <RecalcCondition><![CDATA[true]]></RecalcCondition>
+    <TransientExpression><![CDATA[AdelantadoAceptado != 0 ? AdelantadoAceptadoRetrasado.multiply(new BigDecimal("100")).divide(AdelantadoAceptado, 2, BigDecimal.ROUND_HALF_UP) : null]]></TransientExpression>
+    <Dependencies>
+      <Item
+        Value="AdelantadoAceptadoRetrasado"/>
+      <Item
+        Value="AdelantadoAceptado"/>
+    </Dependencies>
+    <Properties>
+      <SchemaBasedProperties>
+        <LABEL
+          ResId="es.ramondin.estadopedidos.model.views.ResumenPedidosVO.AdelantadoRetrasadoPorcTrans_LABEL"/>
+      </SchemaBasedProperties>
+    </Properties>
+  </ViewAttribute>  
+  <ViewAttribute
+    Name="NoAdelantadoRetrasadoPorcTrans"
+    IsUpdateable="false"
+    IsSelected="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Type="java.math.BigDecimal"
+    ColumnType="BIGINT"
+    AliasName="VIEW_ATTR"
+    SQLType="NUMERIC">
+    <RecalcCondition><![CDATA[true]]></RecalcCondition>
+    <TransientExpression><![CDATA[NoAdelantado != 0 ? NoAdelantadoRetrasado.multiply(new BigDecimal("100")).divide(NoAdelantado, 2, BigDecimal.ROUND_HALF_UP) : null]]></TransientExpression>
+    <Dependencies>
+      <Item
+        Value="NoAdelantadoRetrasado"/>
+      <Item
+        Value="NoAdelantado"/>
+    </Dependencies>
+    <Properties>
+      <SchemaBasedProperties>
+        <LABEL
+          ResId="es.ramondin.estadopedidos.model.views.ResumenPedidosVO.NoAdelantadoRetrasadoPorcTrans_LABEL"/>
+      </SchemaBasedProperties>
+    </Properties>
+  </ViewAttribute>
+  <AttrArray Name="KeyAttributes">
+    <Item Value="Actividad"/>
+    <Item Value="Famiestp"/>
+  </AttrArray>
+  <ResourceBundle>
+    <PropertiesBundle
+      PropertiesFile="es.ramondin.estadopedidos.model.ModelBundle"/>
+  </ResourceBundle>
+  <ClientInterface>
+    <Method
+      Name="limpiaCacheConnx">
+      <Return
+        Type="void"/>
+    </Method>
+    <Method
+      Name="executeWithParamsEdit">
+      <Return
+        Type="void"/>
+      <Parameter
+        Name="desdeAnoPed"
+        Type="java.lang.Integer"/>
+      <Parameter
+        Name="hastaAnoPed"
+        Type="java.lang.Integer"/>
+      <Parameter
+        Name="desdeFecha"
+        Type="java.lang.Integer"/>
+      <Parameter
+        Name="hastaFecha"
+        Type="java.lang.Integer"/>
+      <Parameter
+        Name="margenDias"
+        Type="java.lang.Integer"/>
+    </Method>
+  </ClientInterface>
+</ViewObject>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<pageDefinition xmlns="http://xmlns.oracle.com/adfm/uimodel" version="11.1.1.64.93" id="estadoPedidosPageDef" Package="es.ramondin.estadopedidos.view.pageDefs">
+  <parameters/>
+  <executables>
+    <variableIterator id="variables">
+      <variableUsage DataControl="AppModuleAMDataControl" Binds="EstadoPedidos.variablesMap.DesdeFechaBV" Name="ExecuteWithParams_DesdeFechaBV"
+                     IsQueriable="false"/>
+      <variableUsage DataControl="AppModuleAMDataControl" Binds="EstadoPedidos.variablesMap.HastaFechaBV" Name="ExecuteWithParams_HastaFechaBV"
+                     IsQueriable="false"/>
+      <variableUsage DataControl="AppModuleAMDataControl" Binds="EstadoPedidos.variablesMap.MargenDiasCorreoBV" Name="ExecuteWithParams_MargenDiasCorreoBV"
+                     IsQueriable="false"/>
+    </variableIterator>
+    <iterator Binds="EstadoPedidos" RangeSize="25" DataControl="AppModuleAMDataControl" id="EstadoPedidosIterator"/>
+    <searchRegion Binds="EstadoPedidosIterator" Criteria="" Customizer="oracle.jbo.uicli.binding.JUSearchBindingCustomizer" id="EstadoPedidosQuery"/>
+  </executables>
+  <bindings>
+    <tree IterBinding="EstadoPedidosIterator" id="EstadoPedidos">
+      <nodeDefinition DefName="es.ramondin.estadopedidos.model.views.EstadoPedidosVO" Name="EstadoPedidos0">
+        <AttrNames>
+          <Item Value="Anoped"/>
+          <Item Value="Ordped"/>
+          <Item Value="Linped"/>
+          <Item Value="Fecped"/>
+          <Item Value="Fecprop"/>
+          <Item Value="Fecultcaja"/>
+          <Item Value="Fecpr2"/>
+          <Item Value="Famiestp"/>
+        </AttrNames>
+      </nodeDefinition>
+    </tree>
+    <methodAction IterBinding="EstadoPedidosIterator" id="limpiaCacheConnx" RequiresUpdateModel="true" Action="invokeMethod" MethodName="limpiaCacheConnx"
+                  IsViewObjectMethod="true" DataControl="AppModuleAMDataControl" InstanceName="AppModuleAMDataControl.EstadoPedidos"/>
+    <action IterBinding="EstadoPedidosIterator" id="ExecuteWithParams" InstanceName="AppModuleAMDataControl.EstadoPedidos" DataControl="AppModuleAMDataControl"
+            RequiresUpdateModel="true" Action="executeWithParams">
+      <NamedData NDName="EjecutarQueryBV" NDType="java.lang.Integer"/>
+      <NamedData NDName="DesdeAnoPedBV" NDType="java.lang.Integer"/>
+      <NamedData NDName="HastaAnoPedBV" NDType="java.lang.Integer"/>
+      <NamedData NDName="DesdeFechaBV" NDType="java.lang.Integer"/>
+      <NamedData NDName="HastaFechaBV" NDType="java.lang.Integer"/>
+      <NamedData NDName="MargenDiasBV" NDType="java.lang.Integer"/>
+    </action>
+  </bindings>
+</pageDefinition>

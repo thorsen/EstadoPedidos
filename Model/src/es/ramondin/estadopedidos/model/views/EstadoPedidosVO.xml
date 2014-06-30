@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="windows-1252" ?>
+<!DOCTYPE ViewObject SYSTEM "jbo_03_01.dtd">
+<!---->
+<ViewObject
+  xmlns="http://xmlns.oracle.com/bc4j"
+  Name="EstadoPedidosVO"
+  Version="11.1.1.64.93"
+  InheritPersonalization="true"
+  BindingStyle="JDBC"
+  CustomQuery="true"
+  FetchMode="FETCH_AS_NEEDED"
+  PageIterMode="Full"
+  UseGlueCode="false"
+  ComponentClass="es.ramondin.estadopedidos.model.views.EstadoPedidosVOImpl"
+  ComponentInterface="es.ramondin.estadopedidos.model.views.common.EstadoPedidosVO"
+  ClientProxyName="es.ramondin.estadopedidos.model.views.client.EstadoPedidosVOClient">
+  <DesignTime>
+    <Attr Name="_isExpertMode" Value="true"/>
+    <Attr Name="_codeGenFlag2" Value="Coll"/>
+  </DesignTime>
+  <Variable
+    Name="EjecutarQueryBV"
+    Kind="where"
+    Type="java.lang.Integer"
+    DefaultValue="0">
+    <AttrArray Name="ExtendedDataInts">
+      <Item Value="0"/>
+    </AttrArray>
+  </Variable>
+  <Variable
+    Name="DesdeAnoPedBV"
+    Kind="where"
+    Type="java.lang.Integer">
+    <AttrArray Name="ExtendedDataInts">
+      <Item Value="1"/>
+    </AttrArray>
+  </Variable>
+  <Variable
+    Name="HastaAnoPedBV"
+    Kind="where"
+    Type="java.lang.Integer">
+    <AttrArray Name="ExtendedDataInts">
+      <Item Value="2"/>
+    </AttrArray>
+  </Variable>
+  <Variable
+    Name="DesdeFechaBV"
+    Kind="where"
+    Type="java.lang.Integer">
+    <AttrArray Name="ExtendedDataInts">
+      <Item Value="3"/>
+    </AttrArray>
+  </Variable>
+  <Variable
+    Name="HastaFechaBV"
+    Kind="where"
+    Type="java.lang.Integer">
+    <AttrArray Name="ExtendedDataInts">
+      <Item Value="4"/>
+    </AttrArray>
+  </Variable>
+  <Variable
+    Name="MargenDiasBV"
+    Kind="where"
+    Type="java.lang.Integer">
+    <AttrArray Name="ExtendedDataInts">
+      <Item Value="5"/>
+    </AttrArray>
+  </Variable>
+  <SQLQuery>
+    <![CDATA[SELECT ANOPED, ORDPED, LINPED, FECPED, 
+    LAST(CASE
+        WHEN FECPROP <> 0 THEN FECPROP
+        WHEN FFABFCTP.FCTP_FECHACARGA IS NOT NULL AND FFABFCTP.FCTP_FECHACARGA <> 0 THEN FFABFCTP.FCTP_FECHACARGA
+        ELSE 0
+    END) AS FECPROP, FECULTCAJA, FECPR2, FAMIESTP
+FROM 
+    (SELECT 
+        FCOMMPED_L.MPED_ANOPED AS ANOPED, 
+        FCOMMPED_L.MPED_ORDPED AS ORDPED, 
+        FCOMMPED_L.MPED_LINPED AS LINPED, 
+        FCOMMPED_C.MPED_FECPED AS FECPED, 
+        CASE
+            WHEN FCOMPPEP.PPEP_FECPROP IS NOT NULL AND FCOMPPEP.PPEP_FECPROP <> 0 THEN FCOMPPEP.PPEP_FECPROP
+            ELSE 0
+        END AS FECPROP,
+        CASE
+            WHEN FCOMPPEP.PPEP_FECULTCAJA IS NOT NULL AND FCOMPPEP.PPEP_FECULTCAJA <> 0 AND FCOMPPEP.PPEP_FECULTCAJA <> 538976288 THEN FCOMPPEP.PPEP_FECULTCAJA
+            ELSE 0
+        END AS FECULTCAJA,
+        FCOMMPED_L.MPED_FECPR2 AS FECPR2, 
+        CASE
+            WHEN FCOMMPED_L.MPED_MODELOCAP = 0 THEN (SELECT MVAR_FAMIESTP_60 FROM FFABMVAR_60 WHERE MVAR_CLAVE_60 = 60 AND MVAR_SECUEN_60 = FCOMMPED_L.MPED_FAMI)
+            ELSE (SELECT MVAR_FAMIESTP_94 FROM FFABMVAR_94 WHERE MVAR_CLAVE_94 = 94 AND MVAR_SECUEN_94 = FCOMMPED_L.MPED_FAMI*100 + FCOMMPED_L.MPED_MODELOCAP)
+        END AS FAMIESTP
+    FROM FCOMMPED_L
+    LEFT JOIN FCOMMPED_C
+        ON FCOMMPED_C.MPED_ANOPED = FCOMMPED_L.MPED_ANOPED
+        AND FCOMMPED_C.MPED_ORDPED = FCOMMPED_L.MPED_ORDPED
+        AND FCOMMPED_C.MPED_LINPED = 0
+    LEFT JOIN FCOMPPEP
+        ON FCOMPPEP.PPEP_ANOPED = FCOMMPED_L.MPED_ANOPED
+        AND FCOMPPEP.PPEP_ORDPED = FCOMMPED_L.MPED_ORDPED
+        AND FCOMPPEP.PPEP_LINPED = FCOMMPED_L.MPED_LINPED
+    WHERE FCOMMPED_L.MPED_LINPED > 0
+        AND 1 = ?
+        AND FCOMMPED_L.MPED_ANOPED >= ?
+        AND FCOMMPED_L.MPED_ANOPED <= ?
+        AND FCOMMPED_C.MPED_FECPED >= ?
+        AND FCOMMPED_C.MPED_FECPED <= ?
+    )
+LEFT JOIN FFABFCTP
+    ON FFABFCTP.FCTP_FAMIESTP = FAMIESTP
+    AND (FECPED - FFABFCTP.FCTP_FECHA) BETWEEN 0 AND ?
+GROUP BY ANOPED, ORDPED, LINPED, FECPED, FECULTCAJA, FECPR2, FAMIESTP]]>
+  </SQLQuery>
+  <ViewAttribute
+    Name="Anoped"
+    IsUpdateable="false"
+    IsQueriable="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Type="java.math.BigDecimal"
+    ColumnType="BIGINT"
+    AliasName="ANOPED"
+    Expression="ANOPED"
+    SQLType="NUMERIC">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="6"/>
+    </DesignTime>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="Ordped"
+    IsUpdateable="false"
+    IsQueriable="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Precision="6"
+    Scale="0"
+    Type="java.math.BigDecimal"
+    ColumnType="O"
+    AliasName="ORDPED"
+    Expression="ORDPED"
+    SQLType="NUMERIC">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="8"/>
+    </DesignTime>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="Linped"
+    IsUpdateable="false"
+    IsQueriable="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Precision="2"
+    Scale="0"
+    Type="java.math.BigDecimal"
+    ColumnType="L"
+    AliasName="LINPED"
+    Expression="LINPED"
+    SQLType="NUMERIC">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="4"/>
+    </DesignTime>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="Fecped"
+    IsUpdateable="false"
+    IsQueriable="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Precision="8"
+    Scale="0"
+    Type="java.math.BigDecimal"
+    ColumnType="F"
+    AliasName="FECPED"
+    Expression="FECPED"
+    SQLType="NUMERIC">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="10"/>
+    </DesignTime>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="Fecprop"
+    IsUpdateable="false"
+    IsQueriable="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Precision="12"
+    Scale="0"
+    Type="java.math.BigDecimal"
+    ColumnType="F"
+    AliasName="FECPROP"
+    Expression="FECPROP"
+    SQLType="NUMERIC">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="14"/>
+    </DesignTime>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="Fecultcaja"
+    IsUpdateable="false"
+    IsQueriable="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Precision="8"
+    Scale="0"
+    Type="java.lang.Integer"
+    ColumnType="F"
+    AliasName="FECULTCAJA"
+    Expression="FECULTCAJA"
+    SQLType="INTEGER">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="10"/>
+    </DesignTime>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="Fecpr2"
+    IsUpdateable="false"
+    IsQueriable="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Precision="8"
+    Scale="0"
+    Type="java.math.BigDecimal"
+    ColumnType="F"
+    AliasName="FECPR2"
+    Expression="FECPR2"
+    SQLType="NUMERIC">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="10"/>
+    </DesignTime>
+  </ViewAttribute>
+  <ViewAttribute
+    Name="Famiestp"
+    IsUpdateable="false"
+    IsQueriable="false"
+    IsPersistent="false"
+    PrecisionRule="true"
+    Precision="2"
+    Scale="0"
+    Type="java.math.BigDecimal"
+    ColumnType="F"
+    AliasName="FAMIESTP"
+    Expression="FAMIESTP"
+    SQLType="NUMERIC">
+    <DesignTime>
+      <Attr Name="_DisplaySize" Value="4"/>
+    </DesignTime>
+  </ViewAttribute>
+  <AttrArray Name="KeyAttributes">
+    <Item Value="Anoped"/>
+    <Item Value="Ordped"/>
+    <Item Value="Linped"/>
+  </AttrArray>
+  <ClientInterface>
+    <Method
+      Name="limpiaCacheConnx">
+      <Return
+        Type="void"/>
+    </Method>
+  </ClientInterface>
+</ViewObject>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="windows-1252" ?>
+<adfc-config xmlns="http://xmlns.oracle.com/adf/controller" version="1.2">
+  <managed-bean id="__4">
+    <managed-bean-name id="__3">EstadoPedidosBean</managed-bean-name>
+    <managed-bean-class id="__1">es.ramondin.estadopedidos.view.beans.EstadoPedidosBean</managed-bean-class>
+    <managed-bean-scope id="__2">request</managed-bean-scope>
+  </managed-bean>
+  <managed-bean id="__7">
+    <managed-bean-name id="__6">ResumenPedidosBean</managed-bean-name>
+    <managed-bean-class id="__5">es.ramondin.estadopedidos.view.beans.ResumenPedidosBean</managed-bean-class>
+    <managed-bean-scope id="__8">request</managed-bean-scope>
+  </managed-bean>
+</adfc-config>

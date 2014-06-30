@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<pageDefinition xmlns="http://xmlns.oracle.com/adfm/uimodel" version="11.1.1.64.93" id="resumenPedidosPageDef"
+                Package="es.ramondin.estadopedidos.view.pageDefs">
+  <parameters/>
+  <executables>
+    <variableIterator id="variables"/>
+    <iterator Binds="ResumenPedidos" RangeSize="25" DataControl="AppModuleAMDataControl" id="ResumenPedidosIterator"/>
+    <searchRegion Binds="ResumenPedidosIterator" Criteria="" Customizer="oracle.jbo.uicli.binding.JUSearchBindingCustomizer" id="ResumenPedidosQuery"/>
+  </executables>
+  <bindings>
+    <tree IterBinding="ResumenPedidosIterator" id="ResumenPedidos">
+      <nodeDefinition DefName="es.ramondin.estadopedidos.model.views.ResumenPedidosVO" Name="ResumenPedidos0">
+        <AttrNames>
+          <Item Value="DescActividad"/>
+          <Item Value="DescFamiestp"/>
+          <Item Value="PedidosTotales"/>
+          <Item Value="AdelantadoAceptado"/>
+          <Item Value="AdelantadoPorcTrans"/>
+          <Item Value="Urgente"/>
+          <Item Value="UrgentePorcTrans"/>
+          <Item Value="NoAdelantado"/>
+          <Item Value="NoAdelantadoPorcTrans"/>
+          <Item Value="AdelantadoAceptadoRetrasado"/>
+          <Item Value="AdelantadoRetrasadoPorcTrans"/>
+          <Item Value="NoAdelantadoRetrasado"/>
+          <Item Value="NoAdelantadoRetrasadoPorcTrans"/>
+          <Item Value="Famiestp"/>
+        </AttrNames>
+      </nodeDefinition>
+    </tree>
+    <methodAction IterBinding="ResumenPedidosIterator" id="limpiaCacheConnx" RequiresUpdateModel="true" Action="invokeMethod" MethodName="limpiaCacheConnx"
+                  IsViewObjectMethod="true" DataControl="AppModuleAMDataControl" InstanceName="AppModuleAMDataControl.ResumenPedidos"/>
+    <methodAction IterBinding="ResumenPedidosIterator" id="executeWithParamsEdit" RequiresUpdateModel="true" Action="invokeMethod"
+                  MethodName="executeWithParamsEdit" IsViewObjectMethod="true" DataControl="AppModuleAMDataControl"
+                  InstanceName="AppModuleAMDataControl.ResumenPedidos">
+      <NamedData NDName="desdeAnoPed" NDType="java.lang.Integer"/>
+      <NamedData NDName="hastaAnoPed" NDType="java.lang.Integer"/>
+      <NamedData NDName="desdeFecha" NDType="java.lang.Integer"/>
+      <NamedData NDName="hastaFecha" NDType="java.lang.Integer"/>
+      <NamedData NDName="margenDias" NDType="java.lang.Integer"/>
+    </methodAction>
+  </bindings>
+</pageDefinition>

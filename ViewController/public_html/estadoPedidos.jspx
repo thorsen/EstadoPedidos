@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.1" xmlns:f="http://java.sun.com/jsf/core" xmlns:af="http://xmlns.oracle.com/adf/faces/rich"
+          xmlns:ExportarExcel="/ExportarExcelLib">
+  <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+  <f:view>
+    <af:document id="d1" title="Estado de Pedidos">
+      <af:messages id="m1"/>
+      <af:form id="f1">
+        <af:panelGroupLayout id="pgl1" layout="vertical">
+          <af:panelFormLayout id="pfl2">
+            <af:inputNumberSpinbox label="Desde Año Pedido" id="ins1" minimum="1900" maximum="#{EstadoPedidosBean.anoPedidoMax}" value="#{EstadoPedidosBean.desdeAnoPedido}"
+                                   autoSubmit="true"/>
+            <af:inputNumberSpinbox label="Hasta Año Pedido" id="ins2" minimum="1900" maximum="#{EstadoPedidosBean.anoPedidoMax}" value="#{EstadoPedidosBean.hastaAnoPedido}"
+                                   autoSubmit="true"/>
+            <af:inputDate label="Desde Fecha" id="id1" binding="#{EstadoPedidosBean.ridDesdeFecha}"/>
+            <af:inputDate label="Hasta Fecha" id="id2" binding="#{EstadoPedidosBean.ridHastaFecha}"/>
+            <af:commandButton text="Refrescar Tabla" id="cb1" partialSubmit="true" action="#{EstadoPedidosBean.refrescarTabla}"/>
+          </af:panelFormLayout>
+          <af:panelCollection id="pc1" styleClass="AFStretchWidth">
+            <f:facet name="menus"/>
+            <f:facet name="toolbar"/>
+            <f:facet name="statusbar"/>
+            <af:table value="#{bindings.EstadoPedidos.collectionModel}" var="row" rows="#{bindings.EstadoPedidos.rangeSize}"
+                      emptyText="#{bindings.EstadoPedidos.viewable ? 'No data to display.' : 'Access Denied.'}" fetchSize="#{bindings.EstadoPedidos.rangeSize}"
+                      rowBandingInterval="0" filterModel="#{bindings.EstadoPedidosQuery.queryDescriptor}"
+                      queryListener="#{bindings.EstadoPedidosQuery.processQuery}" filterVisible="true" varStatus="vs" id="t1" partialTriggers=":::cb1">
+              <af:column sortProperty="#{bindings.EstadoPedidos.hints.Anoped.name}" sortable="true" headerText="#{bindings.EstadoPedidos.hints.Anoped.label}"
+                         id="c2">
+                <af:outputText value="#{row.Anoped}" id="ot5"/>
+              </af:column>
+              <af:column sortProperty="#{bindings.EstadoPedidos.hints.Ordped.name}" sortable="true" headerText="#{bindings.EstadoPedidos.hints.Ordped.label}"
+                         id="c4">
+                <af:outputText value="#{row.Ordped}" id="ot4"/>
+              </af:column>
+              <af:column sortProperty="#{bindings.EstadoPedidos.hints.Linped.name}" sortable="true" headerText="#{bindings.EstadoPedidos.hints.Linped.label}"
+                         id="c7">
+                <af:outputText value="#{row.Linped}" id="ot2"/>
+              </af:column>
+              <af:column sortProperty="#{bindings.EstadoPedidos.hints.Fecped.name}" sortable="true" headerText="#{bindings.EstadoPedidos.hints.Fecped.label}"
+                         id="c5">
+                <af:outputText value="#{row.Fecped}" id="ot1"/>
+              </af:column>
+              <af:column sortProperty="#{bindings.EstadoPedidos.hints.Fecprop.name}" sortable="true" headerText="#{bindings.EstadoPedidos.hints.Fecprop.label}"
+                         id="c8">
+                <af:outputText value="#{row.Fecprop}" id="ot8"/>
+              </af:column>
+              <af:column sortProperty="#{bindings.EstadoPedidos.hints.Fecultcaja.name}" sortable="true"
+                         headerText="#{bindings.EstadoPedidos.hints.Fecultcaja.label}" id="c3">
+                <af:outputText value="#{row.Fecultcaja}" id="ot6">
+                  <af:convertNumber groupingUsed="false" pattern="#{bindings.EstadoPedidos.hints.Fecultcaja.format}"/>
+                </af:outputText>
+              </af:column>
+              <af:column sortProperty="#{bindings.EstadoPedidos.hints.Fecpr2.name}" sortable="true" headerText="#{bindings.EstadoPedidos.hints.Fecpr2.label}"
+                         id="c6">
+                <af:outputText value="#{row.Fecpr2}" id="ot3"/>
+              </af:column>
+              <af:column sortProperty="#{bindings.EstadoPedidos.hints.Famiestp.name}" sortable="true"
+                         headerText="#{bindings.EstadoPedidos.hints.Famiestp.label}" id="c1">
+                <af:outputText value="#{row.Famiestp}" id="ot7"/>
+              </af:column>
+            </af:table>
+          </af:panelCollection>
+          <ExportarExcel:CompDecExportarExcel id="cdee1" idTabla="pc1:t1" nombreHoja="Estado Pedidos" arrayColumnasFechaRMD="#{EstadoPedidosBean.columnasFechaRMD}"/>
+        </af:panelGroupLayout>
+      </af:form>
+    </af:document>
+  </f:view>
+</jsp:root>

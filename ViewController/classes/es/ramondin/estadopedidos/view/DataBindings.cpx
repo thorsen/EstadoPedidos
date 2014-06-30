@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Application xmlns="http://xmlns.oracle.com/adfm/application" version="11.1.1.64.93" id="DataBindings" SeparateXMLFiles="false"
+             Package="es.ramondin.estadopedidos.view"
+             ClientType="Generic">
+  <pageMap>
+    <page path="/estadoPedidos.jspx" usageId="es_ramondin_estadopedidos_view_estadoPedidosPageDef"/>
+    <page path="/resumenPedidos.jspx" usageId="es_ramondin_estadopedidos_view_resumenPedidosPageDef"/>
+  </pageMap>
+  <pageDefinitionUsages>
+    <page id="es_ramondin_estadopedidos_view_estadoPedidosPageDef" path="es.ramondin.estadopedidos.view.pageDefs.estadoPedidosPageDef"/>
+    <page id="es_ramondin_estadopedidos_view_resumenPedidosPageDef" path="es.ramondin.estadopedidos.view.pageDefs.resumenPedidosPageDef"/>
+  </pageDefinitionUsages>
+  <dataControlUsages>
+    <BC4JDataControl id="AppModuleAMDataControl" Package="es.ramondin.estadopedidos.model" FactoryClass="oracle.adf.model.bc4j.DataControlFactoryImpl"
+                     SupportsTransactions="true" SupportsFindMode="true" SupportsRangesize="true" SupportsResetState="true" SupportsSortCollection="true"
+                     Configuration="AppModuleAMLocal" syncMode="Immediate" xmlns="http://xmlns.oracle.com/adfm/datacontrol"/>
+  </dataControlUsages>
+</Application>

@@ -1,0 +1,80 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.1" xmlns:f="http://java.sun.com/jsf/core" xmlns:af="http://xmlns.oracle.com/adf/faces/rich"
+          xmlns:ExportarExcel="/ExportarExcelLib">
+  <jsp:directive.page contentType="text/html;charset=UTF-8"/>
+  <f:view>
+    <af:document id="d1" title="Resumen de Pedidos">
+      <af:messages id="m1"/>
+      <af:form id="f1">
+        <af:panelGroupLayout id="pgl1" layout="vertical" >
+          <af:panelFormLayout id="pfl2">
+            <af:inputDate label="Desde Fecha" id="id1" binding="#{ResumenPedidosBean.ridDesdeFecha}" required="true"/>
+            <af:inputDate label="Hasta Fecha" id="id2" binding="#{ResumenPedidosBean.ridHastaFecha}" required="true"/>
+            <af:commandButton text="Refrescar Tabla" id="cb1" partialSubmit="true" action="#{ResumenPedidosBean.refrescarTabla}"/>
+          </af:panelFormLayout>
+          <af:panelCollection id="pc1" inlineStyle="height:500px;width:1122px">
+            <af:table value="#{bindings.ResumenPedidos.collectionModel}" var="row" rows="#{bindings.ResumenPedidos.rangeSize}"
+                      emptyText="#{bindings.ResumenPedidos.viewable ? 'No data to display.' : 'Access Denied.'}"
+                      fetchSize="#{bindings.ResumenPedidos.rangeSize}" rowBandingInterval="0" filterModel="#{bindings.ResumenPedidosQuery.queryDescriptor}"
+                      queryListener="#{bindings.ResumenPedidosQuery.processQuery}" varStatus="vs" id="t1" partialTriggers=":::cb1"
+                      summary="Resumen de pedidos">
+              <af:column sortProperty="#{bindings.ResumenPedidos.hints.DescActividad.name}" sortable="true" width="230" align="#{row != null ? null : 'center'}"
+                         headerText="#{bindings.ResumenPedidos.hints.DescActividad.label}" id="c5" styleClass="#{row.Famiestp == 999999?'AFTableCellSubtotal':''}">
+                <af:outputText value="#{row.DescActividad}" id="ot13"/>
+              </af:column>
+              <af:column sortProperty="#{bindings.ResumenPedidos.hints.DescFamiestp.name}" sortable="true" width="175" align="#{row != null ? null : 'center'}"
+                         headerText="#{bindings.ResumenPedidos.hints.DescFamiestp.label}" id="c1" styleClass="#{row.Famiestp == 999999?'AFTableCellSubtotal':''}">
+                <af:outputText value="#{row.DescFamiestp}" id="ot5"/>
+              </af:column>
+              <af:column sortProperty="#{bindings.ResumenPedidos.hints.PedidosTotales.name}" sortable="true" width="75" align="#{row != null ? 'right' : 'center'}"
+                         headerText="#{bindings.ResumenPedidos.hints.PedidosTotales.label}" id="c10" styleClass="#{row.Famiestp == 999999?'AFTableCellSubtotal':''}">
+                <af:outputText value="#{row.PedidosTotales}" id="ot8"/>
+              </af:column>
+              <af:column sortProperty="#{bindings.ResumenPedidos.hints.AdelantadoAceptado.name}" sortable="true" width="75" align="#{row != null ? 'right' : 'center'}"
+                         headerText="#{bindings.ResumenPedidos.hints.AdelantadoAceptado.label}" id="c4" styleClass="#{row.Famiestp == 999999?'AFTableCellSubtotal':''}">
+                <af:outputText value="#{row.AdelantadoAceptado}" id="ot4"/>
+              </af:column>
+              <af:column sortProperty="#{bindings.ResumenPedidos.hints.AdelantadoPorcTrans.name}" sortable="true" width="40" align="#{row != null ? 'right' : 'center'}"
+                         headerText="#{bindings.ResumenPedidos.hints.AdelantadoPorcTrans.label}" id="c7" styleClass="#{row.Famiestp == 999999?'AFTableCellSubtotal':''}">
+                <af:outputText value="#{row.AdelantadoPorcTrans}" id="ot6"/>
+              </af:column>
+              <af:column sortProperty="#{bindings.ResumenPedidos.hints.Urgente.name}" sortable="true" width="75" align="#{row != null ? 'right' : 'center'}"
+                         headerText="#{bindings.ResumenPedidos.hints.Urgente.label}" id="c8" styleClass="#{row.Famiestp == 999999?'AFTableCellSubtotal':''}">
+                <af:outputText value="#{row.Urgente}" id="ot1"/>
+              </af:column>
+              <af:column sortProperty="#{bindings.ResumenPedidos.hints.UrgentePorcTrans.name}" sortable="true" width="40" align="#{row != null ? 'right' : 'center'}"
+                         headerText="#{bindings.ResumenPedidos.hints.UrgentePorcTrans.label}" id="c3" styleClass="#{row.Famiestp == 999999?'AFTableCellSubtotal':''}">
+                <af:outputText value="#{row.UrgentePorcTrans}" id="ot2"/>
+              </af:column>
+              <af:column sortProperty="#{bindings.ResumenPedidos.hints.NoAdelantado.name}" sortable="true" width="75" align="#{row != null ? 'right' : 'center'}"
+                         headerText="#{bindings.ResumenPedidos.hints.NoAdelantado.label}" id="c9" styleClass="#{row.Famiestp == 999999?'AFTableCellSubtotal':''}">
+                <af:outputText value="#{row.NoAdelantado}" id="ot11"/>
+              </af:column>
+              <af:column sortProperty="#{bindings.ResumenPedidos.hints.NoAdelantadoPorcTrans.name}" sortable="true" width="40" align="#{row != null ? 'right' : 'center'}"
+                         headerText="#{bindings.ResumenPedidos.hints.NoAdelantadoPorcTrans.label}" id="c2" styleClass="#{row.Famiestp == 999999?'AFTableCellSubtotal':''}">
+                <af:outputText value="#{row.NoAdelantadoPorcTrans}" id="ot3"/>
+              </af:column>
+              <af:column sortProperty="#{bindings.ResumenPedidos.hints.AdelantadoAceptadoRetrasado.name}" sortable="true" width="75" align="#{row != null ? 'right' : 'center'}"
+                         headerText="#{bindings.ResumenPedidos.hints.AdelantadoAceptadoRetrasado.label}" id="c13" styleClass="#{row.Famiestp == 999999?'AFTableCellSubtotal':''}">
+                <af:outputText value="#{row.AdelantadoAceptadoRetrasado}" id="ot9"/>
+              </af:column>
+              <af:column sortProperty="#{bindings.ResumenPedidos.hints.AdelantadoRetrasadoPorcTrans.name}" sortable="true" width="40" align="#{row != null ? 'right' : 'center'}"
+                         headerText="#{bindings.ResumenPedidos.hints.AdelantadoRetrasadoPorcTrans.label}" id="c11" styleClass="#{row.Famiestp == 999999?'AFTableCellSubtotal':''}">
+                <af:outputText value="#{row.AdelantadoRetrasadoPorcTrans}" id="ot10"/>
+              </af:column>
+              <af:column sortProperty="#{bindings.ResumenPedidos.hints.NoAdelantadoRetrasado.name}" sortable="true" width="75" align="#{row != null ? 'right' : 'center'}"
+                         headerText="#{bindings.ResumenPedidos.hints.NoAdelantadoRetrasado.label}" id="c12" styleClass="#{row.Famiestp == 999999?'AFTableCellSubtotal':''}">
+                <af:outputText value="#{row.NoAdelantadoRetrasado}" id="ot12"/>
+              </af:column>
+              <af:column sortProperty="#{bindings.ResumenPedidos.hints.NoAdelantadoRetrasadoPorcTrans.name}" sortable="true" width="40" align="#{row != null ? 'right' : 'center'}"
+                         headerText="#{bindings.ResumenPedidos.hints.NoAdelantadoRetrasadoPorcTrans.label}" id="c6" styleClass="#{row.Famiestp == 999999?'AFTableCellSubtotal':''}">
+                <af:outputText value="#{row.NoAdelantadoRetrasadoPorcTrans}" id="ot7"/>
+              </af:column>
+            </af:table>
+          </af:panelCollection>
+          <ExportarExcel:CompDecExportarExcel id="cdee1" idTabla="pc1:t1" nombreHoja="Estado Pedidos"/>
+        </af:panelGroupLayout>
+      </af:form>
+    </af:document>
+  </f:view>
+</jsp:root>

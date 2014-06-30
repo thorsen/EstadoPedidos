@@ -1,0 +1,16 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<BC4JConfig version="11.1" xmlns="http://xmlns.oracle.com/bc4j/configuration">
+   <AppModuleConfigBag ApplicationName="es.ramondin.estadopedidos.model.AppModuleAM">
+      <AppModuleConfig DeployPlatform="LOCAL" jbo.project="es.ramondin.estadopedidos.model.Model" name="AppModuleAMLocal" ApplicationName="es.ramondin.estadopedidos.model.AppModuleAM">
+         <Database jbo.sql92.JdbcDriverClass="com.Connx.jdbc.TCJdbc.TCJdbcDriver" jbo.TypeMapEntries="Java" jbo.locking.mode="optimistic" jbo.SQLBuilder="SQL92"/>
+         <Security AppModuleJndiName="es.ramondin.estadopedidos.model.AppModuleAM"/>
+         <Custom JDBCDataSource="jdbc/connxDS"/>
+      </AppModuleConfig>
+      <AppModuleConfig name="AppModuleAMShared" ApplicationName="es.ramondin.estadopedidos.model.AppModuleAM" DeployPlatform="LOCAL" jbo.project="es.ramondin.estadopedidos.model.Model">
+         <AM-Pooling jbo.ampool.maxpoolsize="1" jbo.ampool.isuseexclusive="false"/>
+         <Database jbo.sql92.JdbcDriverClass="com.Connx.jdbc.TCJdbc.TCJdbcDriver" jbo.TypeMapEntries="Java" jbo.SQLBuilder="SQL92"/>
+         <Security AppModuleJndiName="es.ramondin.estadopedidos.model.AppModuleAM"/>
+         <Custom JDBCDataSource="java:comp/env/jdbc/connxDS"/>
+      </AppModuleConfig>
+   </AppModuleConfigBag>
+</BC4JConfig>
